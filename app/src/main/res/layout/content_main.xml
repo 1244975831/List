@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cn.edu.zucc.list.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+   <Button
+       android:id="@+id/createlist"
+       android:layout_width="match_parent"
+       android:layout_height="48dp"
+       android:text="@string/addlist"
+       android:textColor="#0099FF"
+       android:onClick="createlist"/>
+
+   <ListView
+       android:id="@+id/list"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@+id/createlist">
+   </ListView>
+
+   <fragment
+       android:id="@+id/fragment"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@+id/list"
+       android:name="android.app.ListFragment">
+   </fragment>
+</RelativeLayout>
