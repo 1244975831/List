@@ -248,16 +248,17 @@ public class DBManager {
                 String detialname = cursor.getString(cursor.getColumnIndex("detialname"));
                 String own = cursor.getString(cursor.getColumnIndex("own"));
                 String finished = cursor.getString(cursor.getColumnIndex("finished"));
-
+                String ps =cursor.getString(cursor.getColumnIndex("ps"));
                 datas.setListnum(id);
                 datas.setDetialname(detialname);
-                if (finished.equals(true)){
+                if (finished.equals("1")){
                     datas.setIscheck(true);
                 }else {
                     datas.setIscheck(false);
                 }
 //                datas.setIscheck(detialname);
                 datas.setOwn(own);
+                datas.setPs(ps);
                 data.add(datas);
             }while (cursor.moveToNext());
         }
@@ -276,7 +277,27 @@ public class DBManager {
         dp.delete("Saveuser",null,null);
     }
 
+    public void deleteList(int listnum) {
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        dp.delete("List","_id = ?",new String[]{listnum+""});
+    }
+    public void deletedetial(int detialnum) {
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        dp.delete("Listdetial","_id = ?",new String[]{detialnum+""});
+    }
+    public void updatedetial(int detialnum,Boolean type){
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("finished",type);
+        dp.update("Listdetial",values,"_id = ?",new String[]{detialnum+""});
+    }
 
+    public void updatedetialps(int detialnum,String ps){
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("ps",ps);
+        dp.update("Listdetial",values,"_id = ?",new String[]{detialnum+""});
+    }
     String key = "";
     public void ReadData(){
         Cursor cursor=db.query("EvolveLine",null,null,null,null,null,null);

@@ -8,4 +8,11 @@
         android:title="@string/activity"
         android:icon="@drawable/activity"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:orderInCategory="100"
+        android:title="Search"
+        app:showAsAction="ifRoom" />
 </menu>

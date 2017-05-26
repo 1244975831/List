@@ -1,6 +1,7 @@
 package cn.edu.zucc.list;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -43,18 +45,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private DBManager dbManager;
     ListView list;
-    Button createlist;
     Toolbar toolbar;
     String uesname;
     String spinnercontent;
     int newlistnum;
+    int deleteflag = 0;
+    int listordetial = 0;
+    FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        createlist = (Button)findViewById(R.id.createlist);
+
+
         //侧边栏操作
         draweroperate();
         //加载数据
@@ -62,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //列表操作
         Listoperate();
         //浮动按钮操作
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomizeDialog();
+                showInputDialog();
             }
         });
     }
@@ -159,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ListMain Itemdata = datas.get(position);
                 list.setVisibility(View.GONE);
                 toolbar.setVisibility(View.GONE);
-                createlist.setVisibility(View.GONE);
+
+                fab.setVisibility(View.GONE);
                 ListdetilFragment listdetilFragment = new ListdetilFragment();
 
                 //传值
@@ -174,13 +180,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.commit();
             }
         });
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                registerForContextMenu(list);
+                deleteflag = position;
+                 listordetial = 1;
+                return false;
+            }
+        });
 
     }
 
     public  void detialback(View view){
         list.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
-        createlist.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+
     }
 
     public  void createlist(View view){
@@ -263,11 +279,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                break;
+            case R.id.action_search:
+                Intent intent = new Intent(this,SearchActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.context_main, menu);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.delete&&listordetial==1){
+            ListMain Itemdata = datas.get(deleteflag);
+            dbManager.deleteList(Itemdata.getListnum());
+            initdata();
+            //列表操作
+            Listoperate();
+            listAdapter.notifyDataSetChanged();
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override

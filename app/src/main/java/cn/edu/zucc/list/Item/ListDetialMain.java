@@ -9,6 +9,16 @@ public class ListDetialMain {
     private boolean ischeck;
     private int listnum;
 
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    private String ps;
+
     public String getOwn() {
         return own;
     }

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     android:orientation="vertical">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -38,7 +39,8 @@
     </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:layout_marginTop="8dp"
@@ -54,4 +56,43 @@
             android:paddingLeft="16dp"
             android:text="@string/testname"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:text="@string/finished"/>
+        <Switch
+            android:id="@+id/choosefinish"
+            android:layout_width="108dp"
+            android:layout_height="wrap_content"
+            android:minWidth="56dp"
+            android:switchPadding="8dp"
+            android:textOff="@string/isnotfinish"
+            android:textOn="@string/isfinish"
+            android:layout_marginLeft="72dp"/>
+    </LinearLayout>
+    <EditText
+        android:id="@+id/ps"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="16dp"
+        android:minHeight="200dp"
+        android:hint="@string/ps"
+        android:gravity="start"/>
+    <Button
+        android:id="@+id/sure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/sure"/>
 </LinearLayout>

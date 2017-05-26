@@ -15,6 +15,7 @@
        android:layout_height="48dp"
        android:text="@string/addlist"
        android:textColor="#0099FF"
+       android:visibility="gone"
        android:onClick="createlist"/>
 
    <ListView
