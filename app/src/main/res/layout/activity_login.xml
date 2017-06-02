@@ -17,7 +17,7 @@
         android:layout_height="fill_parent"
         android:padding="0dp"
         android:layout_margin="0dp"
-        android:background="@drawable/advertback"
+        android:background="@drawable/shape_background"
         >
         <ViewFlipper
             android:id="@+id/ViewFlippers"
@@ -29,7 +29,7 @@
             android:layout_marginBottom="150dp">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="325dp">
+                android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="300dp"
                     android:layout_height="300dp"
@@ -37,20 +37,32 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:background="@drawable/list"
-                    android:id="@+id/imageView2" />
+                    android:id="@+id/imageview" />
                 <TextView
+                    android:id="@+id/adv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/imageview"
                     android:text="@string/adtext"
                     android:textSize="20dp"
+                    android:layout_marginTop="18dp"
                     android:textStyle="bold"
                     android:gravity="center"/>
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:scaleType="centerInside"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/adv"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/point1"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="325dp">
+                android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/imageview2"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_alignParentTop="true"
@@ -58,18 +70,31 @@
                     android:layout_alignParentStart="true"
                     android:background="@drawable/setgoals" />
                 <TextView
+                    android:id="@+id/adv2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/imageview2"
                     android:text="@string/adtext1"
+                    android:layout_marginTop="18dp"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:gravity="center"/>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:scaleType="centerInside"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/adv2"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/point_2"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="325dp">
+                android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/imageview3"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_alignParentTop="true"
@@ -77,13 +102,24 @@
                     android:layout_alignParentStart="true"
                     android:background="@drawable/everytime" />
                 <TextView
+                    android:id="@+id/adv3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/imageview3"
+                    android:layout_marginTop="18dp"
                     android:text="@string/adtext2"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:gravity="center"/>
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:scaleType="centerInside"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/adv3"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/point_3"/>
             </RelativeLayout>
         </ViewFlipper>
         <Button
@@ -116,7 +152,7 @@
         android:id="@+id/ueslogin"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/advertback">
+        android:background="@drawable/shape_background">
         <ImageButton
             android:id="@+id/loginback"
             android:layout_width="24dp"
@@ -126,7 +162,7 @@
             android:layout_marginLeft="8dp"
             android:background="#00ffffff"
             android:onClick="loginback"
-            android:src="@drawable/backbutton"/>
+            android:src="@drawable/backbutton1"/>
         <TextView
             android:id="@+id/welcome"
             android:layout_marginTop="16dp"
@@ -178,17 +214,17 @@
         android:id="@+id/uessign"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/advertback">
+        android:background="@drawable/shape_background">
         <ImageButton
             android:id="@+id/signback"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:padding="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginLeft="8dp"
             android:background="#00ffffff"
             android:onClick="signback"
-            android:src="@drawable/backbutton"/>
+            android:src="@drawable/backbutton1"/>
         <TextView
             android:id="@+id/welcomesign"
             android:layout_marginTop="16dp"

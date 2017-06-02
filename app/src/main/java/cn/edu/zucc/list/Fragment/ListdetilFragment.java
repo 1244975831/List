@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -31,9 +32,10 @@ import cn.edu.zucc.list.Item.ListDetialMain;
 import cn.edu.zucc.list.Item.ListMain;
 import cn.edu.zucc.list.MainActivity;
 import cn.edu.zucc.list.R;
+import cn.edu.zucc.list.SearchActivity;
 import cn.edu.zucc.list.adapter.ListDetialAdapter;
 
-public class ListdetilFragment extends Fragment{
+public class ListdetilFragment extends Fragment {
     private List<ListDetialMain> datas;
     ListView listdetial;
     ListView detialfinish;
@@ -43,6 +45,9 @@ public class ListdetilFragment extends Fragment{
     int flag=0;
     int deleteflag = 0;
     int listordetial = 0;
+    String name;
+    TextView tv_date;
+    TextView tv_time;
     ListDetialAdapter listDetialAdapter;
     private DBManager dbManager;
     ArrayList<ListDetialMain> detildata = new ArrayList<>();
@@ -55,7 +60,8 @@ public class ListdetilFragment extends Fragment{
         detialfinish = (ListView) v2.findViewById(R.id.list_task_finish);
         title = (TextView)v2.findViewById(R.id.detial_title);
         task = (EditText)v2.findViewById(R.id.task);
-
+        tv_date = (TextView)v2.findViewById(R.id.set_finishdate);
+        tv_time = (TextView)v2.findViewById(R.id.set_finishtime);
 
 //        fab = (FloatingActionButton) v.findViewById(R.id.fab);
 //        list = (ListView)v.findViewById(R.id.list);
@@ -69,7 +75,11 @@ public class ListdetilFragment extends Fragment{
                 }else {
                     if(flag>0){
                         String PS = task.getText().toString();
-                        dbManager.addListdetial(PS,listnum);
+                        if(PS.isEmpty()||PS.equals("")||PS==""){
+//                        Toast.makeText(getActivity(),"目标名不能为空,创建失败",Toast.LENGTH_SHORT).show();
+                        }else{
+                            dbManager.addListdetial(PS,listnum);
+                        }
                     }
                 }
             }
@@ -87,6 +97,7 @@ public class ListdetilFragment extends Fragment{
         Bundle bundle = getArguments();
         title.setText(bundle.getString("title"));
         listnum = bundle.getInt("listnum");
+        name = bundle.getString("name");
         detildata.clear(); finished.clear();notfinish.clear();
         detildata.addAll(dbManager.selectDetial(listnum));
         for(int i = 0 ;i<detildata.size() ; i ++){
@@ -120,7 +131,7 @@ public class ListdetilFragment extends Fragment{
         listdetial.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                datas=detildata;
+                datas=notfinish;
                 ListDetialMain detialdata = datas.get(position);
 //                dbManager.updatedetial(detialdata.getListnum());
                 ListdetilSet listdetilSet = new ListdetilSet();
@@ -130,10 +141,12 @@ public class ListdetilFragment extends Fragment{
                 bundle.putBoolean("finish",detialdata.ischeck());
                 bundle.putString("title",detialdata.getDetialname());
                 bundle.putString("ps",detialdata.getPs());
+                bundle.putString("deadline",detialdata.getDeadline());
+                bundle.putString("name",name);
                 listdetilSet.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.fragment,listdetilSet);
                 fragmentTransaction.commit();
@@ -143,7 +156,7 @@ public class ListdetilFragment extends Fragment{
         detialfinish.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                datas=detildata;
+                datas=finished;
                 ListDetialMain detialdata = datas.get(position);
 //                dbManager.updatedetial(detialdata.getListnum());
                 ListdetilSet listdetilSet = new ListdetilSet();
@@ -152,6 +165,8 @@ public class ListdetilFragment extends Fragment{
                 bundle.putInt("detialnum",detialdata.getListnum());
                 bundle.putBoolean("finish",detialdata.ischeck());
                 bundle.putString("title",detialdata.getDetialname());
+                bundle.putString("deadline",detialdata.getDeadline());
+                bundle.putString("name",name);
                 listdetilSet.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -209,11 +224,29 @@ public class ListdetilFragment extends Fragment{
 
     };
 
-
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        //得到Fragment的根布局并且使其获得焦点
+        getView().requestFocus();
+        //对该根布局View注册KeyListener的监听
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    // handle back button
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    mainActivity.back();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
+
+
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -226,6 +259,7 @@ public class ListdetilFragment extends Fragment{
             Listoperate();
             listdetial.deferNotifyDataSetChanged();
             detialfinish.deferNotifyDataSetChanged();
+            listordetial=0;
         }
         return super.onContextItemSelected(item);
     }

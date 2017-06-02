@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dbdemo.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private Context mContext;
     public DBHelper(Context context) {
         //CursorFactory设置为null,使用默认值
@@ -24,13 +24,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //用户列表 id 用户名 密码
         db.execSQL("CREATE TABLE IF NOT EXISTS User" +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT,name TEXT , email TEXT)");
         //清单列表
         db.execSQL("CREATE TABLE IF NOT EXISTS List" +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, listname TEXT, own TEXT)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Listdetial" +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, detialname TEXT, own TEXT , ps Text ,finished Text ,deadline Timestamp )");
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, detialname TEXT, own TEXT , ps Text ,finished Text ,deadline TEXT )");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Saveuser" +
                 "(username TEXT, password TEXT )");

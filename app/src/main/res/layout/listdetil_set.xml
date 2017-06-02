@@ -4,8 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    android:orientation="vertical">
+    android:background="@drawable/loginback"
+    android:orientation="vertical"
+    android:weightSum="1"
+    >
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -19,55 +21,128 @@
                 android:id="@+id/setdetial_back"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:padding="24dp"
+                android:padding="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
                 android:background="#00ffffff"
                 android:layout_centerVertical="true"
                 android:onClick="setdetial"
                 android:src="@drawable/backbutton"/>
+
             <TextView
                 android:id="@+id/set_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/testname"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/setdetial_back"
-                android:layout_marginLeft="8dp"
-                android:textSize="16dp"/>
+                android:layout_marginLeft="20dp"
+                android:textSize="20sp"
+                android:textColor="#fafafa"
+                android:layout_alignBottom="@+id/setdetial_back"
+                android:layout_toEndOf="@+id/setdetial_back" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_menu_camera"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:src="@drawable/ic_head_white"
+            android:layout_centerVertical="true"/>
         <TextView
+            android:id="@+id/owner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingLeft="16dp"
-            android:text="@string/testname"/>
-    </LinearLayout>
+            android:paddingLeft="72dp"
+            android:text="@string/testname"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_marginTop="16dp"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_date"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:src="@drawable/ic_insert_invitation_white_48dp"
+            android:layout_centerVertical="true" />
+        <TextView
+            android:id="@+id/set_finishdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dp"
+            android:hint="@string/finishdate"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_time"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:src="@drawable/ic_access_alarms_black_48dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/set_finishtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dp"
+            android:hint="@string/finishtime"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"/>
+
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <RelativeLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:text="@string/finished"/>
+            android:layout_marginLeft="16dp"
+            android:text="@string/finished"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"/>
+
         <Switch
             android:id="@+id/choosefinish"
             android:layout_width="108dp"
@@ -76,19 +151,35 @@
             android:switchPadding="8dp"
             android:textOff="@string/isnotfinish"
             android:textOn="@string/isfinish"
-            android:layout_marginLeft="72dp"/>
-    </LinearLayout>
-    <EditText
-        android:id="@+id/ps"
-        android:layout_marginTop="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:padding="16dp"
-        android:minHeight="200dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <EditText
+        android:id="@+id/ps"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:hint="@string/ps"
-        android:gravity="start"/>
+        android:gravity="start"
+        android:textSize="16sp"
+        android:textColor="@color/primary_text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:maxLines="7"
+        android:scrollbars="vertical"/>
+    <!--
+        android:minHeight="160dp"
+            android:background="@drawable/edittext_db_selector" -->
     <Button
         android:id="@+id/sure"
         android:layout_width="match_parent"

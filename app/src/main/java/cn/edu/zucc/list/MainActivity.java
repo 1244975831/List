@@ -1,11 +1,14 @@
 package cn.edu.zucc.list;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,35 +25,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.zucc.list.DB.DBManager;
 import cn.edu.zucc.list.Fragment.ListdetilFragment;
-import cn.edu.zucc.list.Item.ListDetialMain;
 import cn.edu.zucc.list.Item.ListMain;
+import cn.edu.zucc.list.Item.UserMain;
 import cn.edu.zucc.list.adapter.ListAdapter;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity   implements NavigationView.OnNavigationItemSelectedListener{
     ListAdapter listAdapter;
-    private List<ListMain> datas;
+    List<ListMain> datas;
     ArrayList<ListMain> listdata = new ArrayList<>();
+    ArrayList<UserMain> userinfo = new ArrayList<>();
     private DrawerLayout drawerLayout;
     private DBManager dbManager;
     ListView list;
     Toolbar toolbar;
     String uesname;
+    String name;
     String spinnercontent;
     int newlistnum;
     int deleteflag = 0;
     int listordetial = 0;
+    private int RC_LOGIN = 100;
     FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,88 +63,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.addlist");
+        registerReceiver(mRefreshBroadcastReceiver, intentFilter);
 
-
-        //侧边栏操作
-        draweroperate();
         //加载数据
         initdata();
+        //侧边栏操作
+        draweroperate();
+
         //列表操作
         Listoperate();
+
         //浮动按钮操作
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showInputDialog();
+//                showInputDialog();
+                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+                intent.putExtra("uesname",uesname);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, fab, getString(R.string.transition_dialog));
+                startActivityForResult(intent, RC_LOGIN, options.toBundle());
             }
         });
-    }
-    //创建listdetial的对话框
-    private   void   showCustomizeDialog() {
-
-        AlertDialog.Builder customizeDialog =  new   AlertDialog.Builder(MainActivity.  this  );
-
-        final   View dialogView = LayoutInflater.from(MainActivity.  this  ) .inflate(R.layout.dialog_layout,  null  );
-
-        final Spinner spinner = (Spinner)dialogView.findViewById(R.id.list_select);
-
-        String[] d =new String[ listdata.size()];
-        for(int i = 0 ; i < listdata.size() ; i ++ ){
-
-            d[i]=listdata.get(i).getListname();
-
-        }
-
-        //参数第二个是layout 第三个是控件
-        ArrayAdapter<String> adapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_spinner_item,android.R.id.text1,d);
-
-        spinner.setAdapter(adapter);
-
-        spinnercontent = (String) spinner.getSelectedItem();
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                spinnercontent = (String) spinner.getSelectedItem();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        customizeDialog.setTitle(  "设定目标"  );
-        customizeDialog.setView(dialogView);
-        customizeDialog.setPositiveButton(  "确定"  , new   DialogInterface.OnClickListener() {
-                    @Override
-
-                    public   void   onClick(DialogInterface dialog,   int   which) {
-                        if(spinnercontent==""||spinnercontent==null){
-                            Toast.makeText(MainActivity.this,"请选择要添加到的清单",Toast.LENGTH_SHORT).show();
-                        }else{
-                            EditText editText = (EditText)dialogView.findViewById(R.id.message);
-                            String newlistname = editText.getText().toString();
-                            if(newlistname==""||newlistname.isEmpty()||newlistname==null){
-                                Toast.makeText(MainActivity.this,"目标名不能为空,创建失败",Toast.LENGTH_SHORT).show();
-                            }else{
-                                for(int i = 0 ;i<listdata.size();i++){
-                                    if(spinnercontent.equals(listdata.get(i).getListname())){
-                                        newlistnum = listdata.get(i).getListnum();
-                                    }
-                                }
-                                dbManager.addListdetial(newlistname,newlistnum);
-                                Toast.makeText(MainActivity.this,"创建成功",Toast.LENGTH_SHORT).show();
-                                listAdapter.notifyDataSetChanged();
-                            }
-
-                        }
-                    }
-
-                });
-
-        customizeDialog.show();
-
     }
 
     public void initdata(){
@@ -149,7 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dbManager = new DBManager(getBaseContext());
         listdata.clear();
         listdata.addAll(dbManager.selectList(uesname));
-
+        userinfo.clear();
+        userinfo.add(dbManager.selectUsers(uesname));
+        name = userinfo.get(0).getName();
     }
 
     public void Listoperate(){
@@ -172,11 +121,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Bundle bundle = new Bundle();
                 bundle.putString("title",Itemdata.getListname());
                 bundle.putInt("listnum",  Itemdata.getListnum());
+                bundle.putString("name",name);
                 listdetilFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
                 fragmentTransaction.replace(R.id.fragment,listdetilFragment);
+
                 fragmentTransaction.commit();
             }
         });
@@ -185,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 registerForContextMenu(list);
                 deleteflag = position;
-                 listordetial = 1;
+                listordetial = 1;
                 return false;
             }
         });
@@ -197,6 +150,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
 
+    }
+
+    public  void back (){
+        list.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+    }
+    public void infoback(View view){
+        list.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
     }
 
     public  void createlist(View view){
@@ -235,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setdetial(View view){
-      getFragmentManager().popBackStack();
+        getFragmentManager().popBackStack();
     }
 
     public void draweroperate(){
@@ -246,6 +210,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                initdata();
+                //侧边栏内容修改
+                NavigationView nav_view=(NavigationView)findViewById(R.id.nav_view);
+                View headerView=nav_view.getHeaderView(0);
+                TextView text_name=(TextView)headerView.findViewById(R.id.drawername);
+                text_name.setText(name);
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
@@ -254,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -280,10 +251,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         switch (id){
-            case R.id.action_settings:
-                break;
+            /*case R.id.action_settings:
+                break;*/
             case R.id.action_search:
                 Intent intent = new Intent(this,SearchActivity.class);
+                intent.putExtra("uesname",uesname);
                 startActivity(intent);
                 break;
             default:
@@ -299,15 +271,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        dbManager = new DBManager(getBaseContext());
         int id = item.getItemId();
         if(id==R.id.delete&&listordetial==1){
-            ListMain Itemdata = datas.get(deleteflag);
+            ListMain Itemdata = listdata.get(deleteflag);
             dbManager.deleteList(Itemdata.getListnum());
             initdata();
             //列表操作
             Listoperate();
             listAdapter.notifyDataSetChanged();
+            listordetial=0;
         }
+
         return super.onContextItemSelected(item);
     }
 
@@ -316,6 +291,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.userdetial) {
+            Intent intent = new Intent(this,InfoActivity.class);
+            intent.putExtra("username",uesname);
+            startActivity(intent);
             // Handle the camera action
         } else if (id == R.id.loginout) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -323,20 +301,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         }
-//        else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    //接收广播刷新列表
+    private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("action.addlist"))
+            {
+                initdata();
+                Listoperate();
+                listAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 }

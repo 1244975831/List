@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -57,8 +59,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
-
         viewFlipper = (ViewFlipper)findViewById(R.id.ViewFlippers);
         loginlayout = (RelativeLayout)findViewById(R.id.login);
         ueslogin  = (RelativeLayout)findViewById(R.id.ueslogin);
@@ -75,11 +78,15 @@ public class LoginActivity extends AppCompatActivity {
         lo = (Button) findViewById(R.id.login_inlogin);
         dbManager = new DBManager(getBaseContext());
 //        dbManager.initData();
-        edituesname.setOnKeyListener(onKey);
-        editpassword.setOnKeyListener(onKey);
-        signuesname.setOnKeyListener(onKey);
-        signpassword.setOnKeyListener(onKey);
+        edituesname.setOnKeyListener(onKeylogin);
+        editpassword.setOnKeyListener(onKeylogin);
+        signuesname.setOnKeyListener(onKeySign);
+        signpassword.setOnKeyListener(onKeySign);
         UserMain save = dbManager.selectSaveuser();
+
+        viewFlipper.setFlipInterval(4000);
+        viewFlipper.setAutoStart(true);
+
         if(save.getUsername()!=null){
             username = save.getUsername();
             password = save.getPassword();
@@ -91,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    View.OnKeyListener onKey=new View.OnKeyListener() {
+    View.OnKeyListener onKeySign=new View.OnKeyListener() {
 
         @Override
 
@@ -106,7 +113,33 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0 );
 
                 }
+                si.performClick();
+                return true;
 
+            }
+
+            return false;
+
+        }
+
+    };
+
+    View.OnKeyListener onKeylogin=new View.OnKeyListener() {
+
+        @Override
+
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+            if(keyCode == KeyEvent.KEYCODE_ENTER){
+
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if(imm.isActive()){
+
+                    imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0 );
+
+                }
+                lo.performClick();
                 return true;
 
             }
@@ -260,6 +293,10 @@ public class LoginActivity extends AppCompatActivity {
         else if (d==null) {
            dbManager.signData(username,password);
             Toast.makeText(LoginActivity.this,"恭喜您注册成功",Toast.LENGTH_SHORT).show();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(imm.isActive()) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
             signback(view);
         }
         else{
@@ -299,6 +336,8 @@ public class LoginActivity extends AppCompatActivity {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             x=event.getX();
             y=event.getY();
+            viewFlipper.stopFlipping();
+            viewFlipper.setAutoStart(false);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             x1=event.getX();
@@ -310,6 +349,8 @@ public class LoginActivity extends AppCompatActivity {
             if(x-x1>20){
                 viewFlipper.showNext();
             }
+            viewFlipper.startFlipping();
+            viewFlipper.setAutoStart(true);
         }
         return super.onTouchEvent(event);
     }

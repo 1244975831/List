@@ -1,5 +1,7 @@
 package cn.edu.zucc.list.Item;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Administrator on 2017/4/30.
  */
@@ -8,6 +10,20 @@ public class ListDetialMain {
     private String detialname;
     private boolean ischeck;
     private int listnum;
+    private int _id;
+
+    public int get_id(){return _id;}
+    public void set_id(int _id){this._id = _id;}
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    private String deadline;
 
     public String getPs() {
         return ps;

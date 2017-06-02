@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">List0.2</string>
+    <string name="app_name">List0.8</string>
     <string name="action_settings">Settings</string>
     <string name="activity">活动</string>
     <string name="login">登陆</string>
@@ -12,13 +12,14 @@
     <string name="addtask">添加任务</string>
     <string name="finish">已完成任务</string>
     <string name="addlist">添加清单</string>
+    <string name="listhint">请输入清单名</string>
 
     <string name="welcome">欢迎使用清单</string>
     <string name="welcomesign">欢迎注册清单</string>
     <string name="uesname">请输入账号</string>
     <string name="uespassword">请输入密码</string>
 
-    <string name="testname">测试名</string>
+    <string name="testname">我的清单</string>
     <string name="listname">测试清单</string>
     <string name="email">测试邮箱@163.com</string>
 
@@ -40,6 +41,14 @@
     <string name="finished">任务完成情况：</string>
     <string name="isfinish">已完成</string>
     <string name="isnotfinish">未完成</string>
-    <string name="ps">备注</string>
+    <string name="ps">添加备注...</string>
     <string name="delete">删除</string>
+
+    <string name="info_face">查看头像</string>
+    <string name="info_name">修改名字</string>
+    <string name="transition_dialog">transition_dialog</string>
+    <string name="finishdate">完成日期</string>
+    <string name="finishtime">完成时间</string>
+    <string name="date">日期</string>
+    <string name="time">时间</string>
 </resources>

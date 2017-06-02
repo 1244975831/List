@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,8 @@ public class DBManager {
 //                values.put("id",id);
                 values.put("username",username);
                 values.put("password",password);
+                values.put("name","路人甲");
+                values.put("email","测试邮箱@163.com");
                 db.insert("User",null,values);
                 values.clear();
 
@@ -74,6 +77,7 @@ public class DBManager {
 //                values.put("id",id);
                 values.put("listname",username);
                 values.put("own",password);
+
                 db.insert("List",null,values);
                 values.clear();
 
@@ -115,6 +119,8 @@ public class DBManager {
             //写入User表
             values.put("username",name);
             values.put("password",pwd);
+            values.put("name","路人甲");
+            values.put("email","测试邮箱@163.com");
             db.insert("User",null,values);
             values.clear();
         }catch (Exception e){
@@ -194,9 +200,14 @@ public class DBManager {
 //                int id = cursor.getInt(cursor.getColumnIndex("id"));
                 String username = cursor.getString(cursor.getColumnIndex("username"));
                 String password = cursor.getString(cursor.getColumnIndex("password"));
+                String names = cursor.getString(cursor.getColumnIndex("name"));
+                String email = cursor.getString(cursor.getColumnIndex("email"));
 //                datas.setId(id);
                 datas.setUsername(username);
                 datas.setPassword(password);
+                datas.setName(names);
+                datas.setEmail(email);
+
                 data.add(datas);
             }while (cursor.moveToNext());
         }
@@ -249,6 +260,7 @@ public class DBManager {
                 String own = cursor.getString(cursor.getColumnIndex("own"));
                 String finished = cursor.getString(cursor.getColumnIndex("finished"));
                 String ps =cursor.getString(cursor.getColumnIndex("ps"));
+                String deadline = cursor.getString(cursor.getColumnIndex("deadline"));
                 datas.setListnum(id);
                 datas.setDetialname(detialname);
                 if (finished.equals("1")){
@@ -259,6 +271,7 @@ public class DBManager {
 //                datas.setIscheck(detialname);
                 datas.setOwn(own);
                 datas.setPs(ps);
+                datas.setDeadline(deadline);
                 data.add(datas);
             }while (cursor.moveToNext());
         }
@@ -281,10 +294,12 @@ public class DBManager {
         SQLiteDatabase dp=helper.getWritableDatabase();
         dp.delete("List","_id = ?",new String[]{listnum+""});
     }
+
     public void deletedetial(int detialnum) {
         SQLiteDatabase dp=helper.getWritableDatabase();
         dp.delete("Listdetial","_id = ?",new String[]{detialnum+""});
     }
+
     public void updatedetial(int detialnum,Boolean type){
         SQLiteDatabase dp=helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -298,6 +313,58 @@ public class DBManager {
         values.put("ps",ps);
         dp.update("Listdetial",values,"_id = ?",new String[]{detialnum+""});
     }
+
+    public void updatedetialtime(int detialnum,String time){
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("deadline",time);
+        dp.update("Listdetial",values,"_id = ?",new String[]{detialnum+""});
+    }
+
+    public void updateusername(String username,String name){
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name",name);
+        dp.update("User",values,"username = ?",new String[]{username});
+    }
+
+    public ArrayList<ListDetialMain> searchDetailName(String detailName,String username) {
+        ArrayList<ListDetialMain> data = new ArrayList<>();
+        SQLiteDatabase dp = helper.getWritableDatabase();
+
+        String[] selectionArgs = new String[]{"%"+detailName+"%"};
+
+
+        Cursor cursor = dp.rawQuery("select * from Listdetial,List where detialName like ? and List._id = Listdetial.own",selectionArgs);
+
+       /* Cursor cursor = dp.query("Listdetial", null, "detialName = ? ", selectionArgs, null, null, null);*/
+
+        if (cursor.moveToFirst()) {
+            do {
+                ListDetialMain datas = new ListDetialMain();
+                datas.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
+                datas.setOwn(cursor.getString(cursor.getColumnIndex("own")));
+                datas.setDetialname(cursor.getString(cursor.getColumnIndex("detialname")));
+                String finished=cursor.getString(cursor.getColumnIndex("finished"));
+
+                if (finished.equals("1")){
+                    datas.setIscheck(true);
+                }else {
+                    datas.setIscheck(false);
+                }
+                data.add(datas);
+            } while (cursor.moveToNext());
+        }
+        ArrayList<ListDetialMain> data2 = new ArrayList<>();
+        for(int i = 0 ;i<data.size();i++){
+            if(data.get(i).getOwn().equals(username)){
+                data2.add(data.get(i));
+            }
+        }
+        cursor.close();
+        return data2;
+    }
+
     String key = "";
     public void ReadData(){
         Cursor cursor=db.query("EvolveLine",null,null,null,null,null,null);

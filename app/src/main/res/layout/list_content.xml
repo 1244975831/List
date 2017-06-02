@@ -10,7 +10,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginLeft="16dp"
-           android:layout_centerVertical="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/list_icon"/>
         <TextView
             android:id="@+id/list_name"
