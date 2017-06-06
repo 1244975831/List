@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">List0.8</string>
+    <string name="app_name">List1.0</string>
     <string name="action_settings">Settings</string>
     <string name="activity">活动</string>
     <string name="login">登陆</string>
@@ -9,7 +9,7 @@
     <string name="adtext1">设定目标</string>
     <string name="adtext2">随时随地使用</string>
 
-    <string name="addtask">添加任务</string>
+    <string name="addtask">添加任务...</string>
     <string name="finish">已完成任务</string>
     <string name="addlist">添加清单</string>
     <string name="listhint">请输入清单名</string>

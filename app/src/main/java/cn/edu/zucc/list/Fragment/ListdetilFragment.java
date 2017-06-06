@@ -31,6 +31,7 @@ import cn.edu.zucc.list.DB.DBManager;
 import cn.edu.zucc.list.Item.ListDetialMain;
 import cn.edu.zucc.list.Item.ListMain;
 import cn.edu.zucc.list.MainActivity;
+import cn.edu.zucc.list.Other.DensityUtil;
 import cn.edu.zucc.list.R;
 import cn.edu.zucc.list.SearchActivity;
 import cn.edu.zucc.list.adapter.ListDetialAdapter;
@@ -114,14 +115,15 @@ public class ListdetilFragment extends Fragment {
         ViewGroup.LayoutParams layoutParams = this.listdetial.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.FILL_PARENT;
         // 行高194px
-        layoutParams.height = 194*notfinish.size();
+        int height =DensityUtil.dip2px(getActivity(),48);
+        layoutParams.height = height*notfinish.size();
         listdetial.setLayoutParams(layoutParams);
         listDetialAdapter = new ListDetialAdapter(getActivity(),notfinish);
         listdetial.setAdapter(listDetialAdapter);
 
         layoutParams = this.detialfinish.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.FILL_PARENT;
-        layoutParams.height = 194*finished.size();
+        layoutParams.height = height*finished.size();
         detialfinish.setLayoutParams(layoutParams);
         listDetialAdapter = new ListDetialAdapter(getActivity(),finished);
         detialfinish.setAdapter(listDetialAdapter);
@@ -263,5 +265,7 @@ public class ListdetilFragment extends Fragment {
         }
         return super.onContextItemSelected(item);
     }
+
+
 
 }

@@ -7,39 +7,52 @@
     android:background="@drawable/loginback"
     android:layout_weight="1">
 
+
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical">
-
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/search_view"
-        android:iconifiedByDefault="true"
-        android:inputType="textCapWords"
-        android:imeOptions="actionSearch"
-        android:queryHint="@string/search">
-    </SearchView>
-    <!-- iconifiedByDefault表示搜索图标是否在框内 imeOptions表示回车键的功能，actionSearch表示搜索，queryHint表示搜索框默认文本-->
-    <ListView
-        android:id="@+id/list_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search_view"
-        android:background="#00000000"></ListView>
-
-  </LinearLayout>
-
-  <LinearLayout android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/ll_noResult">
-    <TextView
+    <LinearLayout
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="fill"
-        android:textAlignment="center"
-        android:text="无结果"/>
-  </LinearLayout>
+        android:orientation="vertical">
 
+      <SearchView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/search_view"
+          android:iconifiedByDefault="true"
+          android:inputType="textCapWords"
+          android:imeOptions="actionSearch"
+          android:queryHint="@string/search">
+      </SearchView>
+      <!-- iconifiedByDefault表示搜索图标是否在框内 imeOptions表示回车键的功能，actionSearch表示搜索，queryHint表示搜索框默认文本-->
+      <ListView
+          android:id="@+id/list_detail"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_below="@+id/search_view"
+          android:background="#00000000"></ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ll_noResult">
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:gravity="fill"
+          android:textAlignment="center"
+          android:text="无结果"/>
+    </LinearLayout>
+    <fragment
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="android.app.ListFragment">
+    </fragment>
+  </LinearLayout>
 </FrameLayout >

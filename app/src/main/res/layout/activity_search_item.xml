@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#00000000">
+
     <TextView
     android:id="@+id/item_listname"
     android:layout_width="wrap_content"
@@ -11,8 +12,11 @@
     android:textColor="#fff" android:textSize="16dp"
     android:background="@drawable/shape_task"
     android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:minWidth="48dp"
         android:layout_gravity="center"
     android:layout_centerHorizontal="true"/>
+
     <TextView
         android:id="@+id/item_listdetail"
         android:layout_width="match_parent"

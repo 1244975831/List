@@ -135,7 +135,7 @@ public class ListdetilSet extends Fragment {
                         int d = datePicker.getDayOfMonth();
                         System.out.println("y:"+y+" m:"+m+" d:"+d);//获取时间
                         tv_date.setText(y+"年"+m+"月"+d+"日");
-                        date = tv_date.getText().toString();
+                       // date = tv_date.getText().toString();
                         deadline=y+":"+m+":"+d+":";
                     }
                 });
@@ -169,7 +169,7 @@ public class ListdetilSet extends Fragment {
                         if(deadline==""){
                             deadline=Y+":"+M+":"+D+":";
                         }
-                        time = tv_time.getText().toString();
+                        //time = tv_time.getText().toString();
                         deadline = deadline+h+":"+min+":";
                         dbManager.updatedetialtime(detialnum,deadline);
                         deadline="";

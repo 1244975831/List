@@ -148,7 +148,7 @@ public class DBManager {
         try {
             //写入Listdetial表
             values.put("detialname",listdetialname);
-            values.put("own",own);
+            values.put("owndetial",own);
             values.put("finished",false);
             db.insert("Listdetial",null,values);
             values.clear();
@@ -247,6 +247,32 @@ public class DBManager {
         return result;
     }
 
+    public   ArrayList<ListMain> selectListbynum(int num) {
+        ArrayList<ListMain> data = new ArrayList<>();
+        SQLiteDatabase dp=helper.getWritableDatabase();
+        ArrayList<ListMain> result = new ArrayList();
+        Cursor cursor = dp.query("List",null,null,null,null,null,null);
+        if(cursor.moveToFirst()){
+            do{
+                ListMain datas = new ListMain();
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                String listname = cursor.getString(cursor.getColumnIndex("listname"));
+                String own = cursor.getString(cursor.getColumnIndex("own"));
+                datas.setListnum(id);
+                datas.setListname(listname);
+                datas.setOwn(own);
+                data.add(datas);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        for(int i = 0;i < data.size() ; i++){
+            if (data.get(i).getListnum()==num){
+                result.add(data.get(i));
+            }
+        }
+        return result;
+    }
+
     public  ArrayList<ListDetialMain> selectDetial(int num) {
         ArrayList<ListDetialMain> data = new ArrayList<>();
         SQLiteDatabase dp=helper.getWritableDatabase();
@@ -257,7 +283,7 @@ public class DBManager {
                 ListDetialMain datas = new ListDetialMain();
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 String detialname = cursor.getString(cursor.getColumnIndex("detialname"));
-                String own = cursor.getString(cursor.getColumnIndex("own"));
+                String own = cursor.getString(cursor.getColumnIndex("owndetial"));
                 String finished = cursor.getString(cursor.getColumnIndex("finished"));
                 String ps =cursor.getString(cursor.getColumnIndex("ps"));
                 String deadline = cursor.getString(cursor.getColumnIndex("deadline"));
@@ -283,6 +309,51 @@ public class DBManager {
             }
         }
         return result;
+    }
+
+
+    public ArrayList<ListDetialMain> searchDetailName(String detailName,String username) {
+        ArrayList<ListDetialMain> data = new ArrayList<>();
+        ArrayList<ListDetialMain> data3 = new ArrayList<>();
+        SQLiteDatabase dp = helper.getWritableDatabase();
+
+        String[] selectionArgs = new String[]{"%"+detailName+"%"};
+
+
+        Cursor cursor = dp.rawQuery("select * from Listdetial,List where detialName like ? and List._id = Listdetial.owndetial",selectionArgs);
+
+       /* Cursor cursor = dp.query("Listdetial", null, "detialName = ? ", selectionArgs, null, null, null);*/
+
+        if (cursor.moveToFirst()) {
+            do {
+                ListDetialMain datas = new ListDetialMain();
+                ListDetialMain datas2 = new ListDetialMain();
+                datas.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
+                datas2.setOwn(cursor.getString(cursor.getColumnIndex("own")));
+                datas.setOwn(cursor.getString(cursor.getColumnIndex("owndetial")));
+                datas.setDetialname(cursor.getString(cursor.getColumnIndex("detialname")));
+                String finished=cursor.getString(cursor.getColumnIndex("finished"));
+
+                if (finished.equals("1")){
+                    datas.setIscheck(true);
+                }else {
+                    datas.setIscheck(false);
+                }
+                data.add(datas);
+                data3.add(datas2);
+            } while (cursor.moveToNext());
+        }
+        ArrayList<ListDetialMain> data2 = new ArrayList<>();
+        for(int i = 0 ;i<data.size();i++){
+            if(data3.get(i).getOwn().equals(username)){
+                ListMain l = selectListbynum(Integer.valueOf(data.get(i).getOwn())).get(0);
+                String listname = l.getListname();
+                data.get(i).setOwn(listname);
+                data2.add(data.get(i));
+            }
+        }
+        cursor.close();
+        return data2;
     }
 
     public void deleteSaveuser() {
@@ -327,44 +398,6 @@ public class DBManager {
         values.put("name",name);
         dp.update("User",values,"username = ?",new String[]{username});
     }
-
-    public ArrayList<ListDetialMain> searchDetailName(String detailName,String username) {
-        ArrayList<ListDetialMain> data = new ArrayList<>();
-        SQLiteDatabase dp = helper.getWritableDatabase();
-
-        String[] selectionArgs = new String[]{"%"+detailName+"%"};
-
-
-        Cursor cursor = dp.rawQuery("select * from Listdetial,List where detialName like ? and List._id = Listdetial.own",selectionArgs);
-
-       /* Cursor cursor = dp.query("Listdetial", null, "detialName = ? ", selectionArgs, null, null, null);*/
-
-        if (cursor.moveToFirst()) {
-            do {
-                ListDetialMain datas = new ListDetialMain();
-                datas.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
-                datas.setOwn(cursor.getString(cursor.getColumnIndex("own")));
-                datas.setDetialname(cursor.getString(cursor.getColumnIndex("detialname")));
-                String finished=cursor.getString(cursor.getColumnIndex("finished"));
-
-                if (finished.equals("1")){
-                    datas.setIscheck(true);
-                }else {
-                    datas.setIscheck(false);
-                }
-                data.add(datas);
-            } while (cursor.moveToNext());
-        }
-        ArrayList<ListDetialMain> data2 = new ArrayList<>();
-        for(int i = 0 ;i<data.size();i++){
-            if(data.get(i).getOwn().equals(username)){
-                data2.add(data.get(i));
-            }
-        }
-        cursor.close();
-        return data2;
-    }
-
     String key = "";
     public void ReadData(){
         Cursor cursor=db.query("EvolveLine",null,null,null,null,null,null);

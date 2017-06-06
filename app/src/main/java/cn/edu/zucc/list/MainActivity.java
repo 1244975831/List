@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         setSupportActionBar(toolbar);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.addlist");
+        intentFilter.addAction("action.search");
         registerReceiver(mRefreshBroadcastReceiver, intentFilter);
 
         //加载数据
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         list = (ListView)findViewById(R.id.list);
         listAdapter = new ListAdapter(this,listdata);
         list.setAdapter(listAdapter);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 ListMain Itemdata = datas.get(position);
                 list.setVisibility(View.GONE);
                 toolbar.setVisibility(View.GONE);
-
                 fab.setVisibility(View.GONE);
                 ListdetilFragment listdetilFragment = new ListdetilFragment();
 
@@ -127,9 +126,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
                 fragmentTransaction.replace(R.id.fragment,listdetilFragment);
-
                 fragmentTransaction.commit();
             }
         });
@@ -138,7 +135,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 registerForContextMenu(list);
                 deleteflag = position;
-                listordetial = 1;
+                 listordetial = 1;
                 return false;
             }
         });
@@ -199,7 +196,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     public void setdetial(View view){
-        getFragmentManager().popBackStack();
+      getFragmentManager().popBackStack();
     }
 
     public void draweroperate(){
@@ -256,6 +253,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             case R.id.action_search:
                 Intent intent = new Intent(this,SearchActivity.class);
                 intent.putExtra("uesname",uesname);
+                intent.putExtra("name",name);
                 startActivity(intent);
                 break;
             default:
@@ -318,6 +316,12 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 initdata();
                 Listoperate();
                 listAdapter.notifyDataSetChanged();
+            }if(action.equals("action.search")){
+//                AdapterView.OnItemClickListener onItemClickListener = list.getOnItemClickListener();
+//                if(onItemClickListener!=null){
+//                    onItemClickListener.onItemClick(list,null,0,0);
+//                }
+//                list.performItemClick(list.getChildAt(1),1,list.getItemIdAtPosition(1));
             }
         }
     };

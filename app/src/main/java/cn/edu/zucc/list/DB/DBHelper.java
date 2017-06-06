@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, listname TEXT, own TEXT)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Listdetial" +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, detialname TEXT, own TEXT , ps Text ,finished Text ,deadline TEXT )");
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, detialname TEXT, owndetial TEXT , ps Text ,finished Text ,deadline TEXT )");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Saveuser" +
                 "(username TEXT, password TEXT )");
